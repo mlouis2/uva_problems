@@ -1,6 +1,6 @@
 import sys
 
-class disjoint_set:
+class DisjointSet:
     def __init__(self):
         self.relationships = {}
     def add(self, name):
@@ -25,14 +25,33 @@ class disjoint_set:
                 data1[0] = data2[0]
 
 sys.stdin.readline()
+first_line_in_case = True
 first_line = True
-for line in stdin:
+correct_questions = 0
+incorrect_questions = 0
+for line in sys.stdin:
     if (line == '\n'):
-        first_line = True
-    else:
-        if (first_line):
-            num_computers = int(sys.stdin.readline().strip())
-        else:
-            letter, compA, compB = sys.stdin.readline().strip().split()
-            
+        if (not first_line):
+            print(str(correct_questions) + ',' + str(incorrect_questions))
+            print('')
         first_line = False
+        computer_connections = DisjointSet()
+        correct_questions = 0
+        incorrect_questions = 0
+        first_line_in_case = True
+    else:
+        if (first_line_in_case):
+            num_computers = int(line.strip())
+            for i in range(1, num_computers + 1):
+                computer_connections.add(str(i))
+        else:
+            letter, compA, compB = line.strip().split()
+            if (letter == 'c'):
+                computer_connections.merge(compA, compB)
+            elif (letter == 'q'):
+                if (computer_connections.find(compA) == computer_connections.find(compB)):
+                    correct_questions += 1
+                else:
+                    incorrect_questions += 1
+        first_line_in_case = False
+print(str(correct_questions) + ',' + str(incorrect_questions))
